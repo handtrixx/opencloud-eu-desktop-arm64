@@ -1,5 +1,4 @@
-[![OpenCloud Desktop CI](https://github.com/opencloud-eu/desktop/actions/workflows/main.yml/badge.svg)](https://github.com/opencloud-eu/desktop/actions/workflows/main.yml)
-# `OpenCloud Desktop`
+# `OpenCloud Desktop for ARM64`
 
 ## Introduction
 
@@ -10,15 +9,8 @@ with your computer.
 
 ### Binary packages
 
-- Please have a look at our releases https://github.com/opencloud-eu/desktop/releases
-
-### Source code
-
-The `OpenCloud Desktop` is developed in Git. Since Git makes it easy to
-fork and improve the source code and to adapt it to your need, many copies
-can be found on the Internet, in particular on GitHub. However, the
-authoritative repository maintained by the developers is located at
-https://github.com/opencloud-eu/desktop/.
+- For official releases please have a look at https://github.com/opencloud-eu/desktop/releases first
+- the rest can be found here
 
 ## Reporting issues and contributing
 
@@ -30,10 +22,6 @@ of your report being lost.
 If you created a patch, please submit a [Pull
 Request](https://github.com/opencloud-eu/desktop/pulls).
 
-## Maintainers and Contributors
-
-`OpenCloud Desktop` is developed by the `OpenCloud` community and [receives
-patches from a variety of authors](https://github.com/opencloud-eu/desktop/graphs/contributors).
 
 
 ## License
