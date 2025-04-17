@@ -10,7 +10,7 @@ with your computer.
 ### Binary packages
 
 - For official releases please have a look at https://github.com/opencloud-eu/desktop/releases first
-- the rest can be found here
+- the rest can be found here https://github.com/handtrixx/opencloud-eu-desktop-arm64/releases 
 
 ## Reporting issues and contributing
 
@@ -21,8 +21,6 @@ of your report being lost.
 
 If you created a patch, please submit a [Pull
 Request](https://github.com/opencloud-eu/desktop/pulls).
-
-
 
 ## License
 
