@@ -1,0 +1,240 @@
+// model-body.mustache
+
+{{>licenseInfo}}{{#models}}{{#model}}
+#include "{{classname}}.h"
+
+#include <QDebug>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QObject>
+
+#include "{{prefix}}Helpers.h"
+
+{{#cppNamespaceDeclarations}}
+namespace {{this}} {
+{{/cppNamespaceDeclarations}}
+
+class {{classname}}Private {
+    friend class {{classname}};
+{{^isEnum}}{{#vars}}
+     {{{dataType}}} {{name}};
+     bool {{name}}_isSet;
+     bool {{name}}_isValid;
+{{/vars}}{{/isEnum}}{{#isEnum}}
+     {{classname}}::e{{classname}} value;
+     bool value_isSet;
+     bool value_isValid;
+{{/isEnum}}};
+
+{{classname}}::{{classname}}()
+    : d_ptr()
+{
+}
+
+{{classname}}::{{classname}}(const {{classname}}& other)
+    : d_ptr(other.d_ptr)
+{
+}
+
+{{classname}}::{{classname}}(QString json)
+    : d_ptr(nullptr)
+{
+    this->fromJson(json);
+}
+
+{{classname}}::~{{classname}}() = default;
+
+void {{classname}}::initializeModel() {
+    if (d_ptr == nullptr) {
+        d_ptr.reset(new {{classname}}Private{});
+
+        Q_D({{classname}});
+
+{{^isEnum}}{{#vars}}
+        d->{{name}}_isSet = false;
+        d->{{name}}_isValid = false;{{^-last}}
+{{/-last}}{{/vars}}{{/isEnum}}{{#isEnum}}
+        d->value_isSet = false;
+        d->value_isValid = false;
+        d->value = e{{classname}}::INVALID_VALUE_OPENAPI_GENERATED;{{/isEnum}}
+    }
+}
+
+void {{classname}}::fromJson(QString jsonString) {
+    {{^isEnum}}
+    QByteArray array(jsonString.toUtf8());
+    QJsonDocument doc = QJsonDocument::fromJson(array);
+    QJsonObject jsonObject = doc.object();
+    this->fromJsonObject(jsonObject);
+    {{/isEnum}}
+    {{#isEnum}}
+    Q_D({{classname}});
+    {{#allowableValues}}{{#enumVars}}
+    {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} ( jsonString.compare({{#isString}}"{{value}}"{{/isString}}{{^isString}}QString::number({{value}}){{/isString}}, Qt::CaseInsensitive) == 0) {
+        d->value = e{{classname}}::{{name}};
+        d->value_isSet = d->value_isValid = true;
+    }{{/enumVars}}{{/allowableValues}}
+    {{/isEnum}}
+}
+
+void {{classname}}::fromJson{{^isEnum}}Object{{/isEnum}}{{#isEnum}}Value{{/isEnum}}(QJson{{^isEnum}}Object{{/isEnum}}{{#isEnum}}Value{{/isEnum}} json) {
+    initializeModel();
+
+    Q_D({{classname}});
+{{^isEnum}}{{#vars}}{{^isContainer}}
+    d->{{name}}_isValid = ::{{cppNamespace}}::fromJsonValue(d->{{name}}, json[QString("{{baseName}}")]);
+    d->{{name}}_isSet = !json[QString("{{baseName}}")].isNull() && d->{{name}}_isValid;{{/isContainer}}{{#isContainer}}{{^items.isContainer}}
+    d->{{name}}_isValid = ::{{cppNamespace}}::fromJsonValue(d->{{name}}, json[QString("{{baseName}}")]);
+    d->{{name}}_isSet = !json[QString("{{baseName}}")].isNull() && d->{{name}}_isValid;{{/items.isContainer}}{{#items.isContainer}}{{#isArray}}
+    if(json["{{baseName}}"].isArray()){
+        auto arr = json["{{baseName}}"].toArray();
+        d->{{name}}_isValid = true;
+        if(arr.count() > 0) {
+            for (const QJsonValue jval : arr) {
+                {{^items.isContainer}}{{items.baseType}}{{/items.isContainer}}{{#items.isArray}}QList<{{items.items.baseType}}>{{/items.isArray}}{{#items.isMap}}QMap<QString, {{items.items.baseType}}>{{/items.isMap}} item;
+                d->{{name}}_isValid &= ::{{cppNamespace}}::fromJsonValue(item, jval);
+                d->{{name}}_isSet = !jval.isNull() && d->{{name}}_isValid;
+                {{name}}.push_back(item);
+            }
+        }
+    }{{/isArray}}{{#isMap}}
+    if(json["{{baseName}}"].isObject()){
+        auto varmap = json["{{baseName}}"].toObject().toVariantMap();
+        d->{{name}}_isValid = true;
+        if(varmap.count() > 0){
+            for(auto val : varmap.keys()){
+                {{^items.isContainer}}{{items.baseType}}{{/items.isContainer}}{{#items.isArray}}QList<{{items.items.baseType}}>{{/items.isArray}}{{#items.isMap}}QMap<QString, {{items.items.baseType}}>{{/items.isMap}} item;
+                auto jval = QJsonValue::fromVariant(varmap.value(val));
+                d->{{name}}_isValid &= ::{{cppNamespace}}::fromJsonValue(item, jval);
+                d->{{name}}_isSet &= !jval.isNull() && d->{{name}}_isValid;
+                d->{{name}}.insert({{name}}.end(), val, item);
+            }
+        }
+    }{{/isMap}}{{/items.isContainer}}{{/isContainer}}{{^-last}}
+{{/-last}}
+{{/vars}}{{/isEnum}}{{#isEnum}}{{#allowableValues}}{{#enumVars}}{{#-first}}{{#isString}}fromJson(json.toString());{{/isString}}{{^isString}}d->value = static_cast<e{{classname}}>(json.toInt());{{/isString}}{{/-first}}{{/enumVars}}{{/allowableValues}}{{/isEnum}}
+}
+
+QString {{classname}}::asJson() const {
+    {{^isEnum}}
+    QJsonObject obj = this->asJsonObject();
+    QJsonDocument doc(obj);
+    QByteArray bytes = doc.toJson();
+    return QString(bytes);
+    {{/isEnum}}
+    {{#isEnum}}
+    Q_D(const {{classname}});
+    QString val;
+    {{#allowableValues}}
+    switch (d->value){
+        {{#enumVars}}
+        case e{{classname}}::{{name}}:
+            val = {{#isString}}"{{value}}"{{/isString}}{{^isString}}QString::number({{value}}){{/isString}};
+            break;{{#-last}}
+        default:
+            break;{{/-last}}
+        {{/enumVars}}
+    }{{/allowableValues}}
+    return val;
+    {{/isEnum}}
+}
+
+QJson{{^isEnum}}Object{{/isEnum}}{{#isEnum}}Value{{/isEnum}} {{classname}}::asJson{{^isEnum}}Object{{/isEnum}}{{#isEnum}}Value{{/isEnum}}() const {
+    Q_D(const {{classname}});
+    if(!d){
+        return {};
+    }
+    {{^isEnum}}QJsonObject obj;{{#vars}}{{^isContainer}}{{#complexType}}
+    if (d->{{name}}.isSet()){{/complexType}}{{^complexType}}
+    if (d->{{name}}_isSet){{/complexType}} {
+        obj.insert(QString("{{baseName}}"), ::{{cppNamespace}}::toJsonValue(d->{{name}}));
+    }{{/isContainer}}{{#isContainer}}
+    if (d->{{name}}.size() > 0) {
+        {{^items.isContainer}}obj.insert(QString("{{baseName}}"), ::{{cppNamespace}}::toJsonValue(d->{{name}}));{{/items.isContainer}}{{#items.isContainer}}
+        obj.insert(QString("{{baseName}}"), toJsonValue(d->{{name}}));{{/items.isContainer}}
+    }{{/isContainer}}{{/vars}}
+    return obj;{{/isEnum}}{{#isEnum}}
+    {{#allowableValues}}{{#enumVars}}{{#-first}}{{^isString}}return QJsonValue(static_cast<int>(d->value));{{/isString}}{{#isString}}return QJsonValue(asJson());{{/isString}}{{/-first}}{{/enumVars}}{{/allowableValues}}{{/isEnum}}
+}
+
+{{^isEnum}}{{#vars}}{{{dataType}}} {{classname}}::{{getter}}() const {
+    Q_D(const {{classname}});
+    if(!d){
+        return {};
+    }
+    return d->{{name}};
+}
+void {{classname}}::{{setter}}(const {{{dataType}}} &{{name}}) {
+    Q_D({{classname}});
+    Q_ASSERT(d);
+
+    d->{{name}} = {{name}};
+    d->{{name}}_isSet = true;
+}
+
+bool {{classname}}::is_{{name}}_Set() const{
+    Q_D(const {{classname}});
+    if(!d){
+        return false;
+    }
+
+    return d->{{name}}_isSet;
+}
+
+bool {{classname}}::is_{{name}}_Valid() const{
+    Q_D(const {{classname}});
+    if(!d){
+        return false;
+    }
+    return d->{{name}}_isValid;
+}
+
+{{/vars}}{{/isEnum}}{{#isEnum}}
+{{classname}}::e{{classname}} {{classname}}::getValue() const {
+    Q_D(const {{classname}});
+    if(!d){
+        return {};
+    }
+    return d->value;
+}
+
+void {{classname}}::setValue(const {{classname}}::e{{classname}}& value){
+    Q_D({{classname}});
+    Q_ASSERT(d);
+
+    d->value = value;
+    d->value_isSet = true;
+}
+{{/isEnum}}
+bool {{classname}}::isSet() const {
+    Q_D(const {{classname}});
+    if(!d){
+        return false;
+    }
+    {{^isEnum}}bool isObjectUpdated = false;
+    do {
+{{#vars}}        {{#isContainer}}if (d->{{name}}.size() > 0){{/isContainer}}{{^isContainer}}{{#complexType}}if (d->{{name}}.isSet()){{/complexType}}{{^complexType}}if (d->{{name}}_isSet){{/complexType}}{{/isContainer}} {
+            isObjectUpdated = true;
+            break;
+        }{{^-last}}
+
+{{/-last}}{{/vars}}
+    } while (false);
+    return isObjectUpdated;{{/isEnum}}{{#isEnum}}
+    return d->value_isSet;{{/isEnum}}
+}
+
+bool {{classname}}::isValid() const {
+    Q_D(const {{classname}});
+    if(!d){
+        return false;
+    }
+    // only required properties are required for the object to be considered valid
+    return {{^isEnum}}{{#vars}}{{#required}}d->{{name}}_isValid && {{/required}}{{/vars}}true{{/isEnum}}{{#isEnum}}d->value_isValid{{/isEnum}};
+}
+
+{{#cppNamespaceDeclarations}}
+} // namespace {{this}}
+{{/cppNamespaceDeclarations}}
+{{/model}}
+{{/models}}

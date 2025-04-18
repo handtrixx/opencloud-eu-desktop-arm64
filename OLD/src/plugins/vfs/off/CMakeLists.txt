@@ -1,1 +1,0 @@
-add_vfs_plugin(NAME off SRC vfs_off.cpp)

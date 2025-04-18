@@ -1,0 +1,7 @@
+module eu.OpenCloud.libsync
+linktarget libsyncplugin
+optional plugin libsyncplugin
+classname eu_OpenCloud_libsyncPlugin
+typeinfo libsync.qmltypes
+prefer :/qt/qml/eu/OpenCloud/libsync/
+
