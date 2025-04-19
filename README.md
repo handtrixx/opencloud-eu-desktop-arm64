@@ -9,8 +9,28 @@ with your computer.
 
 ### Binary packages
 
-- For official releases please have a look at https://github.com/opencloud-eu/desktop/releases first
+- For the official releases please have a look at https://github.com/opencloud-eu/desktop/releases first
+
 - the rest can be found here https://github.com/handtrixx/opencloud-eu-desktop-arm64/releases 
+
+## Compile on your own
+
+### Build packages 
+docker build -t opencloud-desktop-client .
+
+### Copy packages to a directory of your choice
+docker run -it -v ./output:/output opencloud-desktop-client
+
+## How to generate libre-graph-api
+
+It comes already generated ready for compilation, but if you want you can also do this on your own.
+
+1. Clone repo from ...
+
+2. Run docker command inside the repos directory
+docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate --enable-post-process-file  -t local/templates/cpp-qt-client  -i local/api/openapi-spec/v1.0.yaml -g cpp-qt-client -o /local/out/cpp
+
+3. replace the cpp folder in in src by the newly generated one.
 
 ## Reporting issues and contributing
 

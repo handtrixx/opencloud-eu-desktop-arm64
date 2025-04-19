@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=fedora:latest
+ARG BASE_IMAGE=arm64v8/fedora:latest
 FROM ${BASE_IMAGE}
 
 LABEL maintainer="niklas.stephan@gmail.com"
@@ -10,34 +10,47 @@ LABEL version="0.1"
 RUN dnf update -y && \
     dnf install -y git cmake gcc-c++ boost-devel openssl-devel libcurl-devel jsoncpp-devel libxml2-devel sqlite-devel qt5-qtbase-devel qt5-qtsvg-devel qt5-linguist qt5-qtmultimedia-devel \
     qt5-qttools-devel qt5-qtwebengine-devel extra-cmake-modules jq kdsingleapplication-qt6-devel patchelf \
-    qt6-qtbase-devel qt6-qttools-devel qt6-qtwebengine-devel qt6-qtmultimedia-devel qtkeychain-qt6-devel mvn && \
+    qt6-qtbase-devel qt6-qttools-devel qt6-qtwebengine-devel qt6-qtmultimedia-devel qtkeychain-qt6-devel mvn rpm-build && \
     dnf clean all
 
 # install libregraphapi
 WORKDIR /apiclient
 COPY ./src/cpp .
 WORKDIR /apiclient/client/build
-RUN cmake .. &&  \
+RUN cmake -DCMAKE_C_FLAGS="-DPAGE_SIZE=$(getconf PAGE_SIZE)" -DCMAKE_CXX_FLAGS="-DPAGE_SIZE=$(getconf PAGE_SIZE)" .. && \
     make -j$(nproc) && \
     make install
 
 WORKDIR /opencloud
-# Get the latest version of the opencloud client
-RUN git clone https://github.com/opencloud-eu/desktop.git && \
-    cd desktop && \
-    mkdir build && \
+RUN git clone https://github.com/opencloud-eu/desktop.git
+
+WORKDIR /opencloud/desktop
+# Add content of cpack.text to CMakeLists.txt
+RUN echo 'set(CPACK_PACKAGE_NAME "opencloud")' >> CMakeLists.txt && \
+    echo 'set(CPACK_PACKAGE_VERSION "1.0.0")' >> CMakeLists.txt && \
+    echo 'set(CPACK_PACKAGE_RELEASE "1")' >> CMakeLists.txt && \
+    echo 'set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenCloud Desktop Client")' >> CMakeLists.txt && \
+    echo 'set(CPACK_PACKAGE_VENDOR "YourName")' >> CMakeLists.txt && \
+    echo 'set(CPACK_PACKAGE_LICENSE "Your License")' >> CMakeLists.txt && \
+    echo 'set(CPACK_PACKAGE_URL "http://yourappwebsite.com")' >> CMakeLists.txt && \
+    echo 'set(CPACK_RPM_PACKAGE_GROUP "Applications/YourAppGroup")' >> CMakeLists.txt && \
+    echo 'set(CPACK_RPM_PACKAGE_REQUIRES "qt6-qtbase >= 6.0, qt6-qttools >= 6.0, libcurl >= 7.0")' >> CMakeLists.txt && \
+    echo 'set(CPACK_RPM_PACKAGE_AUTOREQPROV ON)' >> CMakeLists.txt && \
+    echo 'include(CPack)' >> CMakeLists.txt
+
+RUN mkdir build && \
     cd build && \
-    cmake -DLibreGraphAPI_DIR=/apiclient/cpp/client/build .. && \
+    cmake -DLibreGraphAPI_DIR=/apiclient/cpp/client/build -DCMAKE_C_FLAGS="-DPAGE_SIZE=$(getconf PAGE_SIZE)" -DCMAKE_CXX_FLAGS="-DPAGE_SIZE=$(getconf PAGE_SIZE)"  .. && \
     make -j$(nproc) && \
     make install
+
+# create rpm file
+WORKDIR /opencloud/desktop/build
+RUN cpack -G RPM
 # Install AppImage tools
 RUN curl -Lo /usr/local/bin/appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-aarch64.AppImage && \
     chmod +x /usr/local/bin/appimagetool
-    ## && \
-   # curl -Lo /usr/local/bin/linuxdeploy https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20250213-2/linuxdeploy-aarch64.AppImage && \
-  #  chmod +x /usr/local/bin/linuxdeploy
 # Install AppImage tools
-# Install linuxdeploy by extracting the AppImage
 RUN curl -Lo /tmp/linuxdeploy-aarch64.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20250213-2/linuxdeploy-aarch64.AppImage && \
     chmod +x /tmp/linuxdeploy-aarch64.AppImage && \
     /tmp/linuxdeploy-aarch64.AppImage --appimage-extract && \
@@ -45,8 +58,13 @@ RUN curl -Lo /tmp/linuxdeploy-aarch64.AppImage https://github.com/linuxdeploy/li
     rm -rf /tmp/linuxdeploy-aarch64.AppImage squashfs-root
 
 COPY ./src/icons /opencloud/desktop/build/icons
-COPY ./src/opencloud.desktop /opencloud/desktop/opencloud.desktop
-# Prepare AppDir structure
+RUN echo '[Desktop Entry]' > /opencloud/desktop/opencloud.desktop && \
+    echo 'Name=OpenCloud Desktop Client' >> /opencloud/desktop/opencloud.desktop && \
+    echo 'Exec=opencloud' >> /opencloud/desktop/opencloud.desktop && \
+    echo 'Icon=opencloud' >> /opencloud/desktop/opencloud.desktop && \
+    echo 'Type=Application' >> /opencloud/desktop/opencloud.desktop && \
+    echo 'Categories=Utility;' >> /opencloud/desktop/opencloud.desktop
+
 # Prepare AppDir structure
 RUN mkdir -p /AppDir/usr/bin && \
     mkdir -p /AppDir/usr/share/applications && \
@@ -57,16 +75,10 @@ RUN mkdir -p /AppDir/usr/bin && \
 
 #ENV LD_PRELOAD=""
 ENV NO_FUSE=1
-RUN /usr/local/bin/linuxdeploy --appdir /AppDir --output appimage
+#RUN /usr/local/bin/linuxdeploy --appdir /AppDir --output appimage
 #RUN /usr/local/bin/appimagetool /AppDir /output/OpenCloud-Desktop-Client-x86_64.AppImage
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 WORKDIR /output
 ENTRYPOINT [ "/entrypoint.sh" ]
-
-
-#docker build -t opencloud-desktop-client .
-#docker run -it -v ./bin:/output opencloud-desktop-client
-#    LibreGraphAPIConfig.cmake
-#libregraphapi-config.cmake
