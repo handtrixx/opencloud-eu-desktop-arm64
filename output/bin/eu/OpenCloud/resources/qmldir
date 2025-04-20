@@ -1,0 +1,7 @@
+module eu.OpenCloud.resources
+linktarget OpenCloudResourcesplugin
+optional plugin OpenCloudResourcesplugin
+classname eu_OpenCloud_resourcesPlugin
+typeinfo OpenCloudResources.qmltypes
+prefer :/qt/qml/eu/OpenCloud/resources/
+

@@ -17,7 +17,7 @@ RUN dnf update -y && \
 WORKDIR /apiclient
 COPY ./src/cpp .
 WORKDIR /apiclient/client/build
-RUN cmake -DCMAKE_C_FLAGS="-DPAGE_SIZE=$(getconf PAGE_SIZE)" -DCMAKE_CXX_FLAGS="-DPAGE_SIZE=$(getconf PAGE_SIZE)" .. && \
+RUN cmake .. && \
     make -j$(nproc) && \
     make install
 
@@ -26,7 +26,10 @@ RUN git clone https://github.com/opencloud-eu/desktop.git
 
 WORKDIR /opencloud/desktop
 # Add content of cpack.text to CMakeLists.txt
+
 RUN echo 'set(CPACK_PACKAGE_NAME "opencloud")' >> CMakeLists.txt && \
+    echo 'set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")' >> CMakeLists.txt && \
+    echo 'set(BUILD_SHARED_LIBS OFF)' >> CMakeLists.txt && \
     echo 'set(CPACK_PACKAGE_VERSION "1.0.0")' >> CMakeLists.txt && \
     echo 'set(CPACK_PACKAGE_RELEASE "1")' >> CMakeLists.txt && \
     echo 'set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenCloud Desktop Client")' >> CMakeLists.txt && \
@@ -40,7 +43,7 @@ RUN echo 'set(CPACK_PACKAGE_NAME "opencloud")' >> CMakeLists.txt && \
 
 RUN mkdir build && \
     cd build && \
-    cmake -DLibreGraphAPI_DIR=/apiclient/cpp/client/build -DCMAKE_C_FLAGS="-DPAGE_SIZE=$(getconf PAGE_SIZE)" -DCMAKE_CXX_FLAGS="-DPAGE_SIZE=$(getconf PAGE_SIZE)"  .. && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DLibreGraphAPI_DIR=/apiclient/cpp/client/build .. && \
     make -j$(nproc) && \
     make install
 
@@ -51,7 +54,7 @@ RUN cpack -G RPM
 RUN curl -Lo /usr/local/bin/appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-aarch64.AppImage && \
     chmod +x /usr/local/bin/appimagetool
 # Install AppImage tools
-RUN curl -Lo /tmp/linuxdeploy-aarch64.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20250213-2/linuxdeploy-aarch64.AppImage && \
+RUN curl -Lo /tmp/linuxdeploy-aarch64.AppImage https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-aarch64.AppImage && \
     chmod +x /tmp/linuxdeploy-aarch64.AppImage && \
     /tmp/linuxdeploy-aarch64.AppImage --appimage-extract && \
     mv squashfs-root/usr/bin/linuxdeploy /usr/local/bin/linuxdeploy && \
@@ -61,7 +64,7 @@ COPY ./src/icons /opencloud/desktop/build/icons
 RUN echo '[Desktop Entry]' > /opencloud/desktop/opencloud.desktop && \
     echo 'Name=OpenCloud Desktop Client' >> /opencloud/desktop/opencloud.desktop && \
     echo 'Exec=opencloud' >> /opencloud/desktop/opencloud.desktop && \
-    echo 'Icon=opencloud' >> /opencloud/desktop/opencloud.desktop && \
+    echo 'Icon=256-opencloud-icon' >> /opencloud/desktop/opencloud.desktop && \
     echo 'Type=Application' >> /opencloud/desktop/opencloud.desktop && \
     echo 'Categories=Utility;' >> /opencloud/desktop/opencloud.desktop
 
@@ -76,7 +79,7 @@ RUN mkdir -p /AppDir/usr/bin && \
 #ENV LD_PRELOAD=""
 ENV NO_FUSE=1
 #RUN /usr/local/bin/linuxdeploy --appdir /AppDir --output appimage
-#RUN /usr/local/bin/appimagetool /AppDir /output/OpenCloud-Desktop-Client-x86_64.AppImage
+#RUN /usr/local/bin/appimagetool --appimage-extract-and-run /AppDir /output/OpenCloud-Desktop-Client-aarch64.AppImage
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
