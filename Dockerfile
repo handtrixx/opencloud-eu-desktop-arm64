@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=arm64v8/fedora:latest
 FROM ${BASE_IMAGE}
 
-LABEL maintainer="niklas.stephan@gmail.com"
+LABEL maintainer="pooh85@gmx.de"
 LABEL description="Dockerfile for building the opencloud desktop client"
 LABEL usage="docker build -t opencloud-desktop-client ."
 LABEL version="0.1"
