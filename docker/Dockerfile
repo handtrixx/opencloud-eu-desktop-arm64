@@ -1,4 +1,5 @@
-ARG BASE_IMAGE=arm64v8/fedora:latest
+#ARG BASE_IMAGE=arm64v8/fedora:latest
+ARG BASE_IMAGE=amd64/fedora:latest
 FROM ${BASE_IMAGE}
 
 LABEL maintainer="pooh85@gmx.de"
