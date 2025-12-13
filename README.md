@@ -1,41 +1,32 @@
 # `OpenCloud Desktop for ARM64`
 
-> ⚠️ **Warning**: This Fork currently (2025-12-13) doesn't work and is getting reworked.
+> ⚠️ **Warning**: This Fork currently isn't finished yet.
 
 ## Introduction
 
 `OpenCloud Desktop` is a tool to synchronize files from `OpenCloud`
 with your computer.
-This project is about to provide it also for the arm64 architecture, sinnce the official Linux release is just an AppImage for amd64 and there is nothing else.
+This project is about to provide it also for the arm64 architecture, since the official Linux release is just an AppImage for amd64.
 
-## Compile on your own
+## Compile OpenCloud Package from source
 
-### Build packages 
-docker build -t opencloud-desktop-client .
+If you follow these instructions you will compile the current version of the OpenCloud Desktop client for your system (and for its architecture).
 
-### Copy packages to a directory of your choice
-docker run -it -v ./output:/output opencloud-desktop-client
+### Prerequisites
 
-## How to generate libre-graph-api
+#### Debian based
+```bash
+sudo apt-get install -y cmake build-essential qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev qt6-tools-dev qt6-tools-dev-tools zlib1g-dev extra-cmake-modules libsqlite3-dev qtkeychain-qt6-dev libkdsingleapplication-qt6-dev
+```
 
-It comes already generated ready for compilation, but if you want you can also do this on your own.
+### Build
 
-1. Clone repo from ...
+```bash
+git clone https://github.com/opencloud-eu/desktop.git
+cd desktop && mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j$(nproc)
+sudo make install
+```
 
-2. Run docker command inside the repos directory
-docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate --enable-post-process-file  -t local/templates/cpp-qt-client  -i local/api/openapi-spec/v1.0.yaml -g cpp-qt-client -o /local/out/cpp
-
-3. replace the cpp folder in in src by the newly generated one.
-
-
-## License
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
-for more details.
+The outpout in folder ```bin``` contains the executable ```opencloud``` compiled for your system.

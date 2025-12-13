@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/">
-    <file alias="/qt/qml/eu/OpenCloud/gui">/opencloud/desktop/build/bin/eu/OpenCloud/gui</file>
-
-  </qresource>
-</RCC>
