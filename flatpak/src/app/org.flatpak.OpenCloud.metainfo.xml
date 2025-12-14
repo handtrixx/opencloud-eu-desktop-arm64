@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
   <id>org.flatpak.OpenCloud</id>
+  <icon type="stock">org.flatpak.OpenCloud</icon>
   <name>OpenCloud Desktop</name>
   <summary>Desktop client for OpenCloud file synchronization</summary>
-  <developer_name>handtrixxx</developer_name>
+  <developer_name>Niklas Stephan</developer_name>
   <description>
     <p>
       OpenCloud Desktop is the official desktop client for OpenCloud, 
@@ -34,7 +35,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0-or-later</project_license>
   <releases>
-    <release version="3.0.3" date="2025-12-14">
+    <release version="3.0.3" date="2025-12-12">
       <description>
         <p>Initial Flatpak release of OpenCloud Desktop client.</p>
       </description>
@@ -46,7 +47,7 @@
   <screenshots>
     <screenshot type="default">
       <caption>Main application window</caption>
-      <image>https://opencloud.eu/screenshots/desktop-main.png</image>
+      <image>https://raw.githubusercontent.com/handtrixx/opencloud-eu-desktop-arm64/7cc0acc08b57d8148dd84707901dd22ae90d62a4/flatpak/src/assets/web-ui-gallery-view-optimized.jpg</image>
     </screenshot>
   </screenshots>
   <requires>

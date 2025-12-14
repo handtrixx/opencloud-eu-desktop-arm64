@@ -93,3 +93,20 @@ Run and test
 ```bash
 flatpak run org.flatpak.OpenCloud
 ```
+
+Run the linter
+```bash
+flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest org.flatpak.OpenCloud.yml
+
+flatpak run --command=flatpak-builder-lint org.flatpak.Builder repo repo
+```
+
+Fork Flathub Repository
+```bash
+gh repo fork --clone flathub/flathub && cd flathub && git checkout --track origin/new-pr
+```
+
+Clone the Fork locally
+```bash
+git clone --branch=new-pr https://github.com/handtrixx/flathub.git && cd flathub
+```

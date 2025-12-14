@@ -147,6 +147,11 @@ modules:
       - type: file
         path: src/app/org.flatpak.OpenCloud.desktop
         dest-filename: org.flatpak.OpenCloud.desktop
+      - type: file
+        path: src/assets/favicon.svg
+        dest-filename: org.flatpak.OpenCloud.svg
     post-install:
       - install -Dm644 org.flatpak.OpenCloud.metainfo.xml /app/share/metainfo/org.flatpak.OpenCloud.metainfo.xml
       - install -Dm644 org.flatpak.OpenCloud.desktop /app/share/applications/org.flatpak.OpenCloud.desktop
+      - install -Dm644 org.flatpak.OpenCloud.svg /app/share/icons/hicolor/scalable/apps/org.flatpak.OpenCloud.svg
+      - desktop-file-validate /app/share/applications/org.flatpak.OpenCloud.desktop
