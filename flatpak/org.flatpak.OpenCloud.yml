@@ -141,3 +141,12 @@ modules:
       - type: archive
         url: https://github.com/opencloud-eu/desktop/archive/refs/tags/v3.0.3.tar.gz
         sha256: 2f4f9e047de28b796a9994375e83450d41d3c4d79d4797093c6e1d41e1ee619e
+      - type: file
+        path: src/app/org.flatpak.OpenCloud.metainfo.xml
+        dest-filename: org.flatpak.OpenCloud.metainfo.xml
+      - type: file
+        path: src/app/org.flatpak.OpenCloud.desktop
+        dest-filename: org.flatpak.OpenCloud.desktop
+    post-install:
+      - install -Dm644 org.flatpak.OpenCloud.metainfo.xml /app/share/metainfo/org.flatpak.OpenCloud.metainfo.xml
+      - install -Dm644 org.flatpak.OpenCloud.desktop /app/share/applications/org.flatpak.OpenCloud.desktop

@@ -74,4 +74,22 @@ flatpak remove org.flatpak.OpenCloud
 
 ## Flathub
 
+Install the flathub builder
+```bash
 flatpak install -y flathub org.flatpak.Builder
+```
+
+Add flathub remote repo
+```bash
+flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+```
+
+Build manifest
+```bash
+flatpak run --command=flathub-build org.flatpak.Builder --install org.flatpak.OpenCloud.yml
+```
+
+Run and test
+```bash
+flatpak run org.flatpak.OpenCloud
+```
