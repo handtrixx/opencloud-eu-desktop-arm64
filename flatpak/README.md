@@ -1,6 +1,6 @@
 # OpenCloud Desktop
 
-OpenCloud Desktop is the official desktop client for OpenCloud, a modern file synchronization and sharing solution.
+OpenCloud Desktop is the official desktop client for OpenCloud, a modern file synchronization and sharing solution. This package is using 1:1 the sources of this amazing project to provide a flathub package for it.
 
 ## Features
 - File synchronization with OpenCloud servers
@@ -10,5 +10,5 @@ OpenCloud Desktop is the official desktop client for OpenCloud, a modern file sy
 
 ## Build Instructions
 ```bash
-flatpak-builder --repo=repo --force-clean builddir org.flatpak.OpenCloud.yml
-flatpak install --user repo org.flatpak.OpenCloud
+flatpak-builder --repo=repo --force-clean builddir com.handtrixxx.OpenCloud.yml
+flatpak install --user repo com.handtrixxx.OpenCloud

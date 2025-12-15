@@ -49,17 +49,17 @@ create a .yml repo file "org.flatpak.OpenCloud.yml"
 
 Build the application using Flatpak builder
 ```bash
-flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo --install builddir org.flatpak.OpenCloud.yml
+flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo --install builddir com.handtrixxx.OpenCloud.yml
 ``` 
 
 we could already run the application now:
 ```bash
-flatpak run org.flatpak.OpenCloud
+flatpak run com.handtrixxx.OpenCloud
 ``` 
 
 Create .flatpak bundle file
 ```bash
-flatpak build-bundle repo OpenCloud.flatpak org.flatpak.OpenCloud --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+flatpak build-bundle repo OpenCloud.flatpak com.handtrixxx.OpenCloud --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 ```
 
 Install the final app:
@@ -69,7 +69,7 @@ flatpak install --user OpenCloud.flatpak
 
 Uninstall the final app:
 ```bash
-flatpak remove org.flatpak.OpenCloud
+flatpak remove com.handtrixxx.OpenCloud
 ```
 
 ## Flathub
@@ -86,22 +86,24 @@ flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/fl
 
 Build manifest
 ```bash
-flatpak run --command=flathub-build org.flatpak.Builder --install org.flatpak.OpenCloud.yml
+flatpak run --command=flathub-build org.flatpak.Builder --install com.handtrixxx.OpenCloud.yml
 ```
 
 Run and test
 ```bash
-flatpak run org.flatpak.OpenCloud
+flatpak run com.handtrixxx.OpenCloud
 ```
 
 Run the linter
 ```bash
-flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest org.flatpak.OpenCloud.yml
+flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest com.handtrixxx.OpenCloud.yml
 
 flatpak run --command=flatpak-builder-lint org.flatpak.Builder repo repo
 ```
 
 Fork Flathub Repository
+go to projects base folder
+
 ```bash
 gh repo fork --clone flathub/flathub && cd flathub && git checkout --track origin/new-pr
 ```
@@ -109,4 +111,22 @@ gh repo fork --clone flathub/flathub && cd flathub && git checkout --track origi
 Clone the Fork locally
 ```bash
 git clone --branch=new-pr https://github.com/handtrixx/flathub.git && cd flathub
+```
+copy the files then
+
+```bash
+git add .
+git commit -m "First Commit"
+git push --set-upstream origin my-app-submission
+git push
+
+# issues
+```
+flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest com.handtrixxx.OpenCloud.yml
+{
+    "errors": [
+        "finish-args-home-filesystem-access"
+    ],
+    "message": "See https://docs.flathub.org/linter for details and exceptions"
+}
 ```
