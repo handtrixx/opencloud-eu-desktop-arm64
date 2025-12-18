@@ -8,7 +8,14 @@ OpenCloud Desktop is the official desktop client for OpenCloud, a modern file sy
 - End-to-end encryption support
 - Integrated with your desktop environment
 
+## License
+
+This Flatpak app is based on "The OpenCloud Desktop application", originally developed by the OpenCloud community.
+Source code available at: https://github.com/opencloud-eu/desktop .
+Licensed under GPLv2.
+
 ## Build Instructions
 ```bash
 flatpak-builder --repo=repo --force-clean builddir com.handtrixxx.OpenCloud.yml
 flatpak install --user repo com.handtrixxx.OpenCloud
+```
