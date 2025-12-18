@@ -1,6 +1,5 @@
 # `OpenCloud Desktop for ARM64`
 
-> ⚠️ **Warning**: This Fork currently isn't finished yet.
 
 ## Introduction
 
@@ -130,3 +129,9 @@ flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest com.hand
     "message": "See https://docs.flathub.org/linter for details and exceptions"
 }
 ```
+
+## License
+
+These app  builds are based on "The OpenCloud Desktop application", originally developed by the OpenCloud community.
+Source code available at: https://github.com/opencloud-eu/desktop .
+Licensed under GPLv2.
