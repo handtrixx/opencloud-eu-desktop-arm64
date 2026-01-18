@@ -81,15 +81,18 @@ modules:
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
     sources:
-      - type: archive
-        url: https://github.com/opencloud-eu/desktop/archive/refs/tags/v3.0.3.tar.gz
-        sha256: 2f4f9e047de28b796a9994375e83450d41d3c4d79d4797093c6e1d41e1ee619e
+      - type: dir
+        path: /build/desktop
       - type: file
-        path: src/app/com.handtrixxx.OpenCloud.metainfo.xml
+        path: /build/src/com.handtrixxx.OpenCloud.metainfo.xml
         dest-filename: com.handtrixxx.OpenCloud.metainfo.xml
       - type: file
-        path: src/assets/favicon.svg
+        path: /build/src/favicon.svg
         dest-filename: com.handtrixxx.OpenCloud.svg
     post-install:
       - install -Dm644 com.handtrixxx.OpenCloud.metainfo.xml /app/share/metainfo/com.handtrixxx.OpenCloud.metainfo.xml
       - install -Dm644 com.handtrixxx.OpenCloud.svg /app/share/icons/hicolor/scalable/apps/com.handtrixxx.OpenCloud.svg
+      - cp src/gui/opencloud.desktop /app/share/applications/com.handtrixxx.OpenCloud.desktop
+      - desktop-file-edit --set-key=Icon --set-value=com.handtrixxx.OpenCloud /app/share/applications/com.handtrixxx.OpenCloud.desktop
+      - desktop-file-edit --set-key=Exec --set-value=opencloud /app/share/applications/com.handtrixxx.OpenCloud.desktop
+      - rm -f /app/share/applications/opencloud.desktop /app/share/applications/opencloudcmd.desktop

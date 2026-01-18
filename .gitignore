@@ -1,5 +1,1 @@
-build/
-.flatpak-builder/
-builddir/
-repo/
-flathub/
+old/

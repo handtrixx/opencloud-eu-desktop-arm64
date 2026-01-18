@@ -1,134 +1,78 @@
-# `OpenCloud Desktop for ARM64`
+# `OpenCloud Desktop Flatpaks for ARM64 and AMD64`
 
+Easy and transparent provision of flatpaks made from the official OpenCloud Desktop sources for installation on Linux Operating Systems.
 
 ## Introduction
 
-`OpenCloud Desktop` is a tool to synchronize files from `OpenCloud`
-with your computer.
-This project is about to provide it also for the arm64 architecture, since the official Linux release is just an AppImage for amd64.
+`OpenCloud Desktop` is a tool to synchronize files from `OpenCloud` with your computer.
+This project is about to provide flatpaks for the arm64 and amd64 architectures, since the official Linux release is just an AppImage for amd64.
 
-## Compile OpenCloud Package from source
+## Quickstart
 
-If you follow these instructions you will compile the current version of the OpenCloud Desktop client for your system (and for its architecture).
+### Download
+For arm64 (Rapsi, Server, etc.) download: <a href="#">OpenCloud Desktop for arm64</a>
 
-### Prerequisites
+For amd64 ("classic" PCs with Intel or AMD CPUs) download: <a href="#">OpenCloud Desktop for amd64</a>
 
-#### Debian based
-```bash
-sudo apt-get install -y cmake build-essential qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev qt6-tools-dev qt6-tools-dev-tools zlib1g-dev extra-cmake-modules libsqlite3-dev qtkeychain-qt6-dev libkdsingleapplication-qt6-dev libre-graph-api-cpp-qt-client
-```
+### Install
 
-### Build
+**Note:** Requires Flathub to be configured. If you haven't already, add it with:
 
-```bash
-git clone https://github.com/opencloud-eu/desktop.git
-cd desktop && mkdir build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j$(nproc)
-sudo make install
-```
-
-The outpout in folder ```bin``` contains the executable ```opencloud``` compiled for your system.
-
-## Flatpak Local Build
-
-install flatpak builder and be sure you have added the flathub remote
-```bash
-sudo apt-get install -y flatpak-builder
-flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-```
-
-
-Download the latest source file to get the sha256 checksum
-```yml
-wget -O - https://github.com/opencloud-eu/desktop/archive/refs/tags/v3.0.3.tar.gz | sha256sum
-```
-
-create a .yml repo file "org.flatpak.OpenCloud.yml"
-
-Build the application using Flatpak builder
-```bash
-flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo --install builddir com.handtrixxx.OpenCloud.yml
-``` 
-
-we could already run the application now:
-```bash
-flatpak run com.handtrixxx.OpenCloud
-``` 
-
-Create .flatpak bundle file
-```bash
-flatpak build-bundle repo OpenCloud.flatpak com.handtrixxx.OpenCloud --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
-```
-
-Install the final app:
-```bash
-flatpak install --user OpenCloud.flatpak
-```
-
-Uninstall the final app:
-```bash
-flatpak remove com.handtrixxx.OpenCloud
-```
-
-## Flathub
-
-Install the flathub builder
-```bash
-flatpak install -y flathub org.flatpak.Builder
-```
-
-Add flathub remote repo
 ```bash
 flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 ```
 
-Build manifest
-```bash
-flatpak run --command=flathub-build org.flatpak.Builder --install com.handtrixxx.OpenCloud.yml
-```
+Then install OpenCloud Desktop:
 
-Run and test
-```bash
-flatpak run com.handtrixxx.OpenCloud
-```
-
-Run the linter
-```bash
-flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest com.handtrixxx.OpenCloud.yml
-
-flatpak run --command=flatpak-builder-lint org.flatpak.Builder repo repo
-```
-
-Fork Flathub Repository
-go to projects base folder
+For amd64:
 
 ```bash
-gh repo fork --clone flathub/flathub && cd flathub && git checkout --track origin/new-pr
+flatpak install --user com.handtrixxx.OpenCloud.x86_64.flatpak
 ```
 
-Clone the Fork locally
+For arm64
 ```bash
-git clone --branch=new-pr https://github.com/handtrixx/flathub.git && cd flathub
+flatpak install --user com.handtrixxx.OpenCloud.arm64.flatpak
 ```
-copy the files then
+
+### Done
+
+You can find the OpenCloud Desktop app installed as any other Flatpak on your system, now. Have Fun!
+
+
+## Build on your own
+
+If you prefer to build the flatpaks on your own, you can do so as well. Be prepared the whole procedure can take a very long time, mostly depending on the speed of the host you are using.
+
+### Prequisites
+
+Only prerequisite is that you have installed the docker engine as described on the <a href="https://docs.docker.com/engine/install/" target="_blank">Docker Websites</a>.
+
+For cross-architecture builds (building ARM64 on AMD64 or vice versa), the build script utilizes QEMU.
+
+### Clone Project
 
 ```bash
-git add .
-git commit -m "First Commit"
-git push --set-upstream origin my-app-submission
-git push
+git clone
+```
 
-# issues
+### Execute build script
+
+```bash
+chmod +x ./build.sh
 ```
-flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest com.handtrixxx.OpenCloud.yml
-{
-    "errors": [
-        "finish-args-home-filesystem-access"
-    ],
-    "message": "See https://docs.flathub.org/linter for details and exceptions"
-}
-```
+
+## ToDos
+
+While the build process already always will grab the newest release of the OpenCloud Desktop resources, the other dependencies are currently on hardcoded versions. In future they also should always point to the newest available versions.
+
+There also should be a command line option to build only for a specifc architecuture.
+
+Also the *.flatpak output files should contain the version number, since OpenCloud Desktop has no auto-update functionality.
+
+Actually I planned to distribute the flatpaks via Flathub, but the code reviewer assigned to my request was not really as helpfull as he should be according to their guidelines and had only very limited social skills as well. 
+Asking for support at Heinlein also didn't result in any response. 
+So for the moment this GitHub repository stays the only community contribution regarding packaging for the moment.
 
 ## License
 
