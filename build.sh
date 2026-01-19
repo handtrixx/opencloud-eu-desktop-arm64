@@ -8,21 +8,21 @@ mkdir -p dist
 echo "Setting up QEMU for cross-platform builds..."
 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
-echo "=== Building AMD64 flatpak ==="
-echo "Building Docker image for AMD64..."
-docker buildx build --platform linux/amd64 -f Dockerfile.builder -t opencloud-builder-amd64 --load .
+#echo "=== Building AMD64 flatpak ==="
+#echo "Building Docker image for AMD64..."
+#docker buildx build --platform linux/amd64 -f Dockerfile.builder -t opencloud-builder-amd64 --load .
 
-echo "Removing old AMD64 container if exists..."
-docker rm -f flatpak-build-amd64 2>/dev/null || true
+#echo "Removing old AMD64 container if exists..."
+#docker rm -f flatpak-build-amd64 2>/dev/null || true
 
-echo "Running flatpak-builder in privileged container for AMD64..."
-docker run --platform linux/amd64 --privileged --name flatpak-build-amd64 opencloud-builder-amd64
+#echo "Running flatpak-builder in privileged container for AMD64..."
+#docker run --platform linux/amd64 --privileged --name flatpak-build-amd64 opencloud-builder-amd64
 
-echo "Copying AMD64 flatpak bundle..."
-docker cp flatpak-build-amd64:/build/src/com.handtrixxx.OpenCloud.flatpak ./dist/com.handtrixxx.OpenCloud.x86_64.flatpak
+#echo "Copying AMD64 flatpak bundle..."
+#docker cp flatpak-build-amd64:/build/src/com.handtrixxx.OpenCloud.flatpak ./dist/com.handtrixxx.OpenCloud.x86_64.flatpak
 
-echo "Cleaning up AMD64 container..."
-docker rm flatpak-build-amd64
+#echo "Cleaning up AMD64 container..."
+#docker rm flatpak-build-amd64
 
 echo ""
 echo "=== Building ARM64 flatpak ==="
