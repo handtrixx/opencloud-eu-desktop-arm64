@@ -41,7 +41,3 @@ echo ""
 echo "=== Build complete! ==="
 echo "Flatpak bundle created:"
 ls -lh dist/com.handtrixxx.OpenCloud.${FLATPAK_ARCH}.flatpak
-
-#docker build -f Dockerfile.builder -t opencloud-builder .
-#docker run --privileged --name flatpak-build opencloud-builder
-#docker cp flatpak-build:/build/src/com.handtrixxx.OpenCloud.flatpak ./com.handtrixxx.OpenCloud.flatpak

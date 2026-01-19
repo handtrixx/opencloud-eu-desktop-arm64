@@ -42,13 +42,11 @@ You can find the OpenCloud Desktop app installed as any other Flatpak on your sy
 
 ## Build on your own
 
-If you prefer to build the flatpaks on your own, you can do so as well. Be prepared the whole procedure can take a very long time, mostly depending on the speed of the host you are using.
+If you prefer to build the flatpaks on your own, you can do so as well. Be prepared the whole procedure can take a while, mostly depending on the speed of the host you are using.
 
 ### Prequisites
 
 Only prerequisite is that you have installed the docker engine as described on the <a href="https://docs.docker.com/engine/install/" target="_blank">Docker Websites</a>.
-
-For cross-architecture builds (building ARM64 on AMD64 or vice versa), the build script utilizes QEMU.
 
 ### Clone Project
 
@@ -59,14 +57,12 @@ git clone
 ### Execute build script
 
 ```bash
-chmod +x ./build.sh
+./build.sh
 ```
 
 ## ToDos
 
 While the build process already always will grab the newest release of the OpenCloud Desktop resources, the other dependencies are currently on hardcoded versions. In future they also should always point to the newest available versions.
-
-There also should be a command line option to build only for a specifc architecuture.
 
 Also the *.flatpak output files should contain the version number, since OpenCloud Desktop has no auto-update functionality.
 
