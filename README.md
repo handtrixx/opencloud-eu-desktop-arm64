@@ -35,6 +35,13 @@ For arm64
 flatpak install --user com.handtrixxx.OpenCloud.arm64.flatpak
 ```
 
+*if that fails with error "Fehler: The application com.handtrixxx.OpenCloud/x86_64/master requires the runtime org.kde.Platform/x86_64/6.10 which was not found", run:
+```bash
+flatpak install --user flathub org.kde.Platform//6.10
+```
+and try again.
+
+
 ### Done
 
 You can find the OpenCloud Desktop app installed as any other Flatpak on your system, now. Have Fun!
