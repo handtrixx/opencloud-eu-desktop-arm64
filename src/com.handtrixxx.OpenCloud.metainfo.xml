@@ -54,7 +54,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0-or-later</project_license>
   <releases>
-    <release version="3.0.3" date="2025-12-17">
+    <release version="4.0.0" date="2026-09-03">
       <description>
         <p>Initial Flatpak release of OpenCloud Desktop client.</p>
       </description>

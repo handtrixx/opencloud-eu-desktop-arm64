@@ -67,6 +67,14 @@ git clone
 ./build.sh
 ```
 
+### Version Information
+
+The flatpak bundles will include version information from the upstream OpenCloud Desktop source.
+To update the version:
+1. Locate the version in the `src/com.handtrixxx.OpenCloud.metainfo.xml` file (currently set to 3.0.3)
+2. Change it to the desired version number
+3. Rebuild the flatpaks
+
 ## ToDos
 
 While the build process already always will grab the newest release of the OpenCloud Desktop resources, the other dependencies are currently on hardcoded versions. In future they also should always point to the newest available versions.
