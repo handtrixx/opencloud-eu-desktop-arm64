@@ -1,0 +1,17 @@
+app-id: com.handtrixxx.Smoke
+runtime: org.kde.Platform
+runtime-version: '6.10'
+sdk: org.kde.Sdk
+command: echo-hello
+finish-args:
+  - --share=ipc
+modules:
+  - name: hello-test
+    buildsystem: simple
+    sources:
+      - type: script
+        commands:
+          - echo "smoke module compiled fine" > /app/hello.txt
+    post-install:
+      - echo hello-smoke > /app/bin/echo-hello
+      - chmod +x /app/bin/echo-hello
