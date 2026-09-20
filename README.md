@@ -64,16 +64,52 @@ git clone
 ### Execute build script
 
 ```bash
-./build.sh
+./build.sh              # build for the host architecture
+./build.sh arm64        # build for ARM64
+./build.sh detect       # print the upstream version that would be built, then exit
+./build.sh check        # check the host has everything needed to build
+./build.sh --help       # show all options
 ```
 
 ### Version Information
 
-The flatpak bundles will include version information from the upstream OpenCloud Desktop source.
-To update the version:
-1. Locate the version in the `src/com.handtrixxx.OpenCloud.metainfo.xml` file (currently set to 3.0.3)
-2. Change it to the desired version number
-3. Rebuild the flatpaks
+The version is detected automatically: the build picks the latest *stable* upstream
+release tag (e.g. `v4.0.0` → version `4.0.0`) and names the bundle accordingly:
+`dist/com.handtrixxx.OpenCloud_<VERSION>.<arch>.flatpak`. Prerelease tags
+(`-rc`, `-beta`, `-alpha`) are ignored.
+
+Preview the version that would be built, without starting a build:
+
+```bash
+./build.sh detect
+# Detected upstream tag : v4.0.0
+# Detected version      : 4.0.0
+```
+
+**Check the host for build compatibility (no build):**
+
+Reports whether the host has the components needed to build (git, docker, the
+docker daemon, a supported architecture, network) and points out anything
+missing, with a suggested fix for each:
+
+```bash
+./build.sh check
+```
+
+Add `--strict` to also run a minimal `--privileged` container and prove that
+requirement actually holds (the Flatpak build needs `docker run --privileged`):
+
+```bash
+./build.sh check --strict
+```
+
+> Note: `flatpak`, `flatpak-builder`, `cmake` and `ninja` are installed *inside*
+> the Docker build image — they are **not** host requirements, so `check` does not
+> expect them on the host.
+
+> **Status:** the x86_64 (host) build works today. A *true* ARM64 cross-compile
+> (a real aarch64 bundle, not just a relabelled one) is still being wired up — see
+> `AGENTS.md` → **Next steps** (Step 3/4).
 
 ## ToDos
 
