@@ -13,6 +13,7 @@ finish-args:
   - --filesystem=/media
   - --filesystem=/mnt
   - --filesystem=/run/media
+  - --filesystem=xdg-run/OpenCloud
   - --talk-name=org.freedesktop.secrets
   - --talk-name=org.kde.StatusNotifierWatcher
 modules:
